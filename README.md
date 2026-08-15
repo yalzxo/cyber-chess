@@ -1,8 +1,8 @@
-# ♟ AI CHESS (AI Guardrail Chess)
+# ♟ CYBER CHESS 
 
 > **Tagline:** *"Predict the attack. Make the counter-move."*
 
-**AI Chess** is an autonomous cybersecurity platform for securing AI agents. Instead of simply detecting prompt injection, it predicts how a malicious input could propagate through an agent's tools and permissions, identifies the **most probable next attack move**, and recommends the guardrail that best reduces the risk.
+**Cyber Chess** is an autonomous cybersecurity platform for securing AI agents. Instead of simply detecting prompt injection, it predicts how a malicious input could propagate through an agent's tools and permissions, identifies the **most probable next attack move**, and recommends the guardrail that best reduces the risk.
 
 ---
 
@@ -79,7 +79,7 @@ http://localhost:5173
 ## 🏛 Architecture
 
 ```text
-ai-guardrail-chess/
+cyber-chess/
 │
 ├── backend/
 │   ├── main.py                # FastAPI endpoints & application startup
@@ -113,7 +113,7 @@ ai-guardrail-chess/
 
 ## 🔄 System Workflow
 
-AI Chess follows a predictive defense loop:
+Cyber Chess follows a predictive defense loop:
 
 ```text
 Malicious Input
@@ -153,7 +153,7 @@ Recalculate Attack Graph
 
 ## 🛡️ Guardrails
 
-AI Chess can evaluate defenses such as:
+Cyber Chess can evaluate defenses such as:
 
 * Restrict CRM Access
 * Require Human Approval
@@ -198,7 +198,7 @@ http://localhost:8000/docs
 
 ## 🎯 Project Goal
 
-AI Chess shifts AI-agent security from **detection to prediction and intervention**.
+Cyber Chess shifts AI-agent security from **detection to prediction and intervention**.
 
 Instead of stopping at:
 
