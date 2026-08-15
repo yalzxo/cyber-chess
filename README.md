@@ -2,126 +2,212 @@
 
 > **Tagline:** *"Predict the attack. Make the counter-move."*
 
-**AI Chess** is an autonomous cybersecurity platform designed for AI-agent security. Instead of simply alerting that a prompt injection was detected, AI Chess mathematically predicts how an indirect prompt injection or malicious input will escalate through an AI agent's available tools and permissions using a **NetworkX probabilistic attack graph engine**.
+**AI Chess** is an autonomous cybersecurity platform for securing AI agents. Instead of simply detecting prompt injection, it predicts how a malicious input could propagate through an agent's tools and permissions, identifies the **most probable next attack move**, and recommends the guardrail that best reduces the risk.
 
 ---
 
-## 🎯 Key Features & Core Loop
+## 🎯 Key Features
 
-1. **Predictive Attack Graphs**: Computes transition probabilities across agent tool boundaries using NetworkX Dijkstra log-weight path calculation.
-2. **Adversary Next-Move Prediction**: Answers *what is the most probable next attack move?* (e.g., `CRM Tool Abuse` at **81%** transition probability).
-3. **Dynamic Defense Recommendation**: Evaluates all candidate guardrails (*Restrict CRM Access*, *Require Human Approval*, *Disable External Email Tool*, *Sandbox Agent*), ranks them by risk reduction, and recommends the optimal counter-move.
-4. **Real-Time Path Interdiction**: Applying a guardrail immediately alters agent tool accessibility, rebuilds the NetworkX attack graph, and recalculates risk in real time (e.g. Risk drops from **82 → 29** / 100 and marks the target database as **UNREACHABLE**).
-5. **Interactive "What-If?" Simulator**: Test hypothetical guardrail scenarios without modifying live state.
-6. **Full-Stack REST Architecture**: Real FastAPI + SQLAlchemy (SQLite) backend connected to a high-performance React + React Flow frontend.
+* **Predictive Attack Graphs**
+  Models AI-agent tools, permissions, external inputs, databases, and sensitive resources using **NetworkX**.
+
+* **Adversary Next-Move Prediction**
+  **Predicts the attacker's most likely next action and assigns a transition probability to it.**
+  Example: `CRM Tool Abuse — 81% probability`.
+
+* **Dynamic Defense Recommendation**
+  Evaluates available guardrails and ranks them based on their estimated risk reduction.
+
+* **Real-Time Path Interdiction**
+  Applying a guardrail changes tool accessibility, rebuilds the attack graph, and recalculates the risk score.
+
+* **What-If Simulator**
+  Compare hypothetical defenses without modifying the active simulation.
+
+* **Full-Stack Architecture**
+  FastAPI + SQLAlchemy + SQLite backend with a React + React Flow frontend.
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Quick Start
 
 ### Prerequisites
-- **Python 3.9+**
-- **Node.js 18+** & **npm**
 
----
+* Python 3.9+
+* Node.js 18+
+* npm
 
-### 1. Start the Backend
+### Backend
 
 ```bash
 cd backend
 
-# Create & activate Python virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
 
-# Start FastAPI server with live reload
 uvicorn main:app --reload
 ```
 
-The backend server will run at:
-- **API URL:** `http://localhost:8000`
-- **Swagger Docs:** `http://localhost:8000/docs`
+Backend:
 
----
+```text
+API:     http://localhost:8000
+Swagger: http://localhost:8000/docs
+```
 
-### 2. Start the Frontend
+### Frontend
 
-In a separate terminal window:
+Open a second terminal:
 
 ```bash
 cd frontend
 
-# Install Node dependencies
 npm install
-
-# Start Vite development server
 npm run dev
 ```
 
-The frontend application will open at:
-- **Web App URL:** `http://localhost:5173`
+Frontend:
+
+```text
+http://localhost:5173
+```
 
 ---
 
-## 🏛 Architecture & Project Structure
+## 🏛 Architecture
 
-```
+```text
 ai-guardrail-chess/
 │
 ├── backend/
-│   ├── main.py                # FastAPI REST Endpoints & Lifespan Seeding
-│   ├── database.py            # SQLite database & SQLAlchemy configuration
-│   ├── models.py              # SQLAlchemy DB models
-│   ├── schemas.py             # Pydantic request/response schemas
-│   ├── graph_engine.py        # NetworkX attack graph traversal engine
-│   ├── attack_predictor.py    # Attack chain & next-move predictor
-│   ├── risk_engine.py         # 0-100 Normalized risk calculation engine
-│   ├── defense_engine.py      # Guardrail simulation & ranking engine
-│   ├── simulation_engine.py   # State coordinator & persistent state manager
-│   ├── seed_data.py           # Synthetic NovaCare Support data seeder
-│   └── requirements.txt       # Python backend dependencies
+│   ├── main.py                # FastAPI endpoints & application startup
+│   ├── database.py            # SQLite & SQLAlchemy configuration
+│   ├── models.py              # Database models
+│   ├── schemas.py             # Pydantic schemas
+│   ├── graph_engine.py        # NetworkX attack graph engine
+│   ├── attack_predictor.py    # Attack prediction
+│   ├── risk_engine.py         # Risk calculation
+│   ├── defense_engine.py      # Guardrail evaluation
+│   ├── simulation_engine.py   # Simulation state management
+│   ├── seed_data.py           # Synthetic NovaCare Support data
+│   └── requirements.txt
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/        # React Flow AttackGraph, CommandCenter, etc.
-│   │   ├── services/          # REST API fetch service client
-│   │   ├── types/             # TypeScript model definitions
-│   │   ├── App.tsx            # Main application layout & global state
-│   │   ├── index.css          # Cyberpunk dark theme styles
-│   │   └── main.tsx           # React entry point
-│   ├── package.json           # Frontend dependencies
-│   └── vite.config.ts         # Vite proxy setup for local API
+│   │   ├── components/        # React Flow & UI components
+│   │   ├── services/          # REST API client
+│   │   ├── types/             # TypeScript types
+│   │   ├── App.tsx            # Main application
+│   │   ├── index.css          # Application styling
+│   │   └── main.tsx           # Entry point
+│   ├── package.json
+│   └── vite.config.ts
 │
-├── README.md                  # Instructions and project documentation
-└── .gitignore                 # Version control exclusions
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## 🎬 60–90 Second Hackathon Demo Script
+## 🔄 System Workflow
 
-1. **Open Command Center** (`http://localhost:5173`)
-   - Show Customer Support AI agent monitored in synthetic company *NovaCare Support*.
-   - Point out initial **Cyber Risk: 82 / 100 (HIGH)**.
+AI Chess follows a predictive defense loop:
 
-2. **Click "START ATTACK"**
-   - Watch the **Attack Graph** highlight the active attack path:
-     `External Content` → `AI Agent` → `CRM` → `Customer Database` → `Sensitive Customer Data`
+```text
+Malicious Input
+      ↓
+AI Agent
+      ↓
+Attack Graph
+      ↓
+⭐ NEXT-MOVE PREDICTION
+      ↓
+Risk Calculation
+      ↓
+Guardrail Recommendation
+      ↓
+Apply Defense
+      ↓
+Recalculate Attack Graph
+```
 
-3. **Inspect AI Adversary Analysis**
-   - Next Likely Move: **CRM Tool Abuse (81%)**
-   - Best Counter-Move: **Restrict CRM Access** (Risk Reduction: **53 points**).
+---
 
-4. **Click "APPLY GUARDRAIL"**
-   - Observe real backend execution (`POST /api/guardrails/apply`).
-   - The backend revokes CRM write permission and rebuilds the attack graph.
-   - The attack path is **INTERRUPTED**, Customer Database becomes **UNREACHABLE**, and Cyber Risk drops to **29 / 100 (LOW)**.
+## 🧩 Core Components
 
-5. **Test "WHAT IF?" Mode**
-   - Open the **WHAT IF?** modal to test hypothetical guardrails like *Sandbox Agent* or *Disable External Email Tool* and view comparative risk deltas.
+| Component               | Purpose                                                       |
+| ----------------------- | ------------------------------------------------------------- |
+| **NetworkX**            | Attack graph construction and path analysis                   |
+| **Attack Predictor**    | Predicts the adversary's next move and transition probability |
+| **Risk Engine**         | Produces a normalized 0–100 risk score                        |
+| **Defense Engine**      | Evaluates and ranks guardrails                                |
+| **Simulation Engine**   | Manages simulation state                                      |
+| **FastAPI**             | REST API                                                      |
+| **SQLAlchemy + SQLite** | Data persistence                                              |
+| **React + React Flow**  | Interactive security dashboard                                |
+| **Vite**                | Frontend development server                                   |
 
-6. **Reset Environment**
-   - Click **RESET SIMULATION** (`POST /api/simulation/reset`) to restore initial conditions.
+---
+
+## 🛡️ Guardrails
+
+AI Chess can evaluate defenses such as:
+
+* Restrict CRM Access
+* Require Human Approval
+* Disable External Email Tool
+* Sandbox Agent
+
+Each defense is evaluated based on how effectively it disrupts reachable attack paths and reduces overall risk.
+
+---
+
+## 🔌 REST API
+
+The backend provides endpoints for:
+
+* Simulation state
+* Attack prediction
+* Attack graph generation
+* Risk calculation
+* Guardrail recommendations
+* Guardrail application
+* What-if simulations
+* Simulation reset
+
+Interactive API documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+## 🎮 Simulation Controls
+
+| Control              | Action                                             |
+| -------------------- | -------------------------------------------------- |
+| **START ATTACK**     | Activates the simulated attack                     |
+| **APPLY GUARDRAIL**  | Applies the selected defense and recalculates risk |
+| **WHAT IF?**         | Tests a defense without changing the active state  |
+| **RESET SIMULATION** | Restores the initial environment                   |
+
+---
+
+## 🎯 Project Goal
+
+AI Chess shifts AI-agent security from **detection to prediction and intervention**.
+
+Instead of stopping at:
+
+> "Prompt injection detected."
+
+it answers:
+
+> **What will the attacker likely do next?**
+> **How probable is that move?**
+> **What can they reach?**
+> **Which defense is most effective?**
+> **How does the attack surface change after applying it?**
